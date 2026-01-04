@@ -1,4 +1,5 @@
 
+
 export enum ExamType {
   REGULAR = 'Thường xuyên',
   MID_TERM = 'Giữa kỳ',
@@ -88,4 +89,37 @@ export interface CurriculumChapter {
 export interface ChatMessage {
   role: 'user' | 'model' | 'systemError';
   content: string;
+}
+
+// FIX: Add missing type definitions to resolve compilation errors in older components.
+export enum CognitiveLevel {
+    NHAN_BIET = 'Nhận biết',
+    THONG_HIEU = 'Thông hiểu',
+    VAN_DUNG = 'Vận dụng',
+    VAN_DUNG_CAO = 'Vận dụng cao',
+}
+
+export interface MatrixRow {
+    id: number;
+    topic: string;
+    [CognitiveLevel.NHAN_BIET]: { mcq: number; essay: number };
+    [CognitiveLevel.THONG_HIEU]: { mcq: number; essay: number };
+    [CognitiveLevel.VAN_DUNG]: { mcq: number; essay: number };
+    [CognitiveLevel.VAN_DUNG_CAO]: { mcq: number; essay: number };
+}
+
+export interface ExamDetails {
+    school: string;
+    subject: string;
+    grade: string;
+    duration: number;
+    examType: string;
+}
+
+export interface Question {
+  questionText: string;
+  questionType: 'multiple_choice' | 'essay';
+  options?: string[];
+  correctAnswer?: string;
+  solution?: string;
 }

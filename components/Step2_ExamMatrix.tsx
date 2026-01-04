@@ -90,13 +90,18 @@ const Step2ExamMatrix: React.FC<Props> = ({ matrix, setMatrix, onGenerate, isLoa
               <th scope="col" colSpan={2} className="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider border-r">Tổng cộng</th>
                <th scope="col" rowSpan={2} className="px-2 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider"></th>
             </tr>
+            {/* FIX: Replaced incorrect concatenation with a map and separate elements to resolve TypeScript error. */}
             <tr>
-              {COGNITIVE_LEVELS.concat(['total']).map((level, i) => (
-                <React.Fragment key={i}>
+              {COGNITIVE_LEVELS.map((level) => (
+                <React.Fragment key={level}>
                   <th scope="col" className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-t">TN</th>
                   <th scope="col" className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-t">TL</th>
                 </React.Fragment>
               ))}
+                <React.Fragment>
+                  <th scope="col" className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-t">TN</th>
+                  <th scope="col" className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-t">TL</th>
+                </React.Fragment>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
