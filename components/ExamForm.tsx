@@ -143,6 +143,10 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
     });
     return mergedCurriculum;
   }, [config.subject, config.grade, config.textbook]);
+  
+  const availableChapters = useMemo(() => {
+    return [...new Set(availableCurriculum.map(c => c.chapter))];
+  }, [availableCurriculum]);
 
   useEffect(() => {
     const total = config.levelDistribution.awareness + config.levelDistribution.understanding + config.levelDistribution.application;
@@ -155,13 +159,23 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
   }, [config.scopeItems]);
 
   const handleChange = (field: keyof ExamConfig, value: any) => {
-    if (field === 'inputMode' && value !== config.inputMode) {
-      setFileName("");
-      setUploadStatus({ status: 'idle', message: '' });
-      setConfig((prev) => ({ ...prev, uploadedContent: undefined, [field]: value }));
-    } else {
-      setConfig((prev) => ({ ...prev, [field]: value }));
-    }
+    setConfig((prev) => {
+      let newConfig = { ...prev, [field]: value };
+
+      // Handle side-effects of changing certain fields
+      if (field === 'inputMode' && value !== prev.inputMode) {
+        setFileName("");
+        setUploadStatus({ status: 'idle', message: '' });
+        newConfig.uploadedContent = undefined;
+      }
+
+      if (field === 'subject' && value !== prev.subject) {
+        // Reset scopeItems to its initial state when subject changes
+        newConfig.scopeItems = [{ id: '1', chapter: '', name: '', periods: 0 }];
+      }
+
+      return newConfig;
+    });
   };
   
   const handleTextbookChange = (bookName: string, isChecked: boolean) => {
@@ -565,7 +579,7 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
           </div>
           
           <p className="text-xs text-gray-500 font-medium italic -mt-2">
-            Nhập chi tiết các chương và bài học sẽ được đưa vào đề kiểm tra. AI sẽ dựa vào đây để phân bổ kiến thức và tạo câu hỏi.
+            Chọn hoặc nhập chi tiết các chương và bài học. AI sẽ dựa vào đây để phân bổ kiến thức và tạo câu hỏi.
           </p>
           
           <div className="bg-slate-50/60 border border-slate-200/80 rounded-3xl p-4 space-y-4 shadow-sm">
@@ -580,8 +594,14 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
 
             {/* Input Rows */}
             <div className="space-y-2">
+              <datalist id="chapters-list">
+                {availableChapters.map(chapter => <option key={chapter} value={chapter} />)}
+              </datalist>
+
               {config.scopeItems.map((item, idx) => {
                 const isDragging = draggedItemId === item.id;
+                const chapterLessons = availableCurriculum.find(c => c.chapter === item.chapter)?.lessons || [];
+                
                 return (
                   <div 
                     key={item.id} 
@@ -604,10 +624,19 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
                       <label className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">Chương / Chủ đề</label>
                       <input 
                         type="text" 
+                        list="chapters-list"
                         className="w-full px-3 py-2 border-b border-gray-200 focus:border-blue-500 rounded-lg text-sm outline-none transition-all bg-transparent focus:bg-white font-bold text-blue-950" 
                         value={item.chapter} 
-                        placeholder="Tên chương / Chủ đề..." 
-                        onChange={(e) => updateScopeItem(item.id, 'chapter', e.target.value)} 
+                        placeholder="Chọn hoặc nhập tên chương..." 
+                        onChange={(e) => {
+                          const newChapter = e.target.value;
+                          updateScopeItem(item.id, 'chapter', newChapter);
+                          const newLessons = availableCurriculum.find(c => c.chapter === newChapter)?.lessons ?? [];
+                          const lessonExists = newLessons.some(l => l.name === item.name);
+                          if (!lessonExists && item.name) {
+                              updateScopeItem(item.id, 'name', '');
+                          }
+                        }}
                       />
                     </div>
                     
@@ -615,11 +644,15 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
                        <label className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">Tên bài học</label>
                       <input 
                         type="text" 
+                        list={`lessons-list-${item.id}`}
                         className="w-full px-3 py-2 border-b border-gray-200 focus:border-blue-500 rounded-lg text-sm outline-none transition-all bg-transparent focus:bg-white font-medium text-gray-700" 
                         value={item.name} 
-                        placeholder="Tên bài học cụ thể..." 
+                        placeholder="Chọn hoặc nhập tên bài học..." 
                         onChange={(e) => updateScopeItem(item.id, 'name', e.target.value)} 
                       />
+                       <datalist id={`lessons-list-${item.id}`}>
+                          {chapterLessons.map(lesson => <option key={`${item.id}-${lesson.name}`} value={lesson.name} />)}
+                       </datalist>
                     </div>
 
                     <div className="col-span-1 md:col-span-1">

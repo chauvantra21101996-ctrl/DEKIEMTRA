@@ -48,19 +48,16 @@ const Guide: React.FC<Props> = ({ isOpen, onClose }) => {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* FIX: The GuideStep component requires children. Changed from self-closing tag to wrapping the text content. */}
+                    {/* FIX: The GuideStep component requires a 'children' prop, but it was being invoked as a self-closing tag. Updated to pass the descriptive text as children to the component. */}
                     <GuideStep icon={Settings} title="Bước 1: Thiết lập Hồ sơ">
                         Cung cấp các thông tin cơ bản như Môn, Lớp, bộ Sách giáo khoa, phạm vi kiến thức và cấu trúc số lượng câu hỏi mong muốn.
                     </GuideStep>
-                    {/* FIX: The GuideStep component requires children. Changed from self-closing tag to wrapping the text content. */}
                     <GuideStep icon={Bot} title="Bước 2: AI Khởi tạo">
                         Nhấn nút "Khởi tạo". Trí tuệ nhân tạo sẽ phân tích yêu cầu, tính toán, và tạo ra bộ hồ sơ 7991 đầy đủ chỉ trong vài giây.
                     </GuideStep>
-                    {/* FIX: The GuideStep component requires children. Changed from self-closing tag to wrapping the text content. */}
                     <GuideStep icon={FileText} title="Bước 3: Xem & Tinh chỉnh">
                         Xem chi tiết Ma trận, Bản đặc tả, Đề thi và Đáp án. Bạn có thể sao chép, in ấn hoặc xuất ra file Word, PDF để sử dụng.
                     </GuideStep>
-                    {/* FIX: The GuideStep component requires children. Changed from self-closing tag to wrapping the text content. */}
                     <GuideStep icon={PlusCircle} title="Bước 4: Tính năng Phụ trợ">
                         Sử dụng Trợ lý AI để hỏi đáp chuyên môn hoặc bấm "Lưu trữ" để quản lý các bộ hồ sơ đã tạo một cách khoa học.
                     </GuideStep>

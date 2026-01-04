@@ -62,6 +62,12 @@ const App: React.FC = () => {
     }
   };
 
+  const handleRegenerate = () => {
+    if (currentConfigForResults) {
+      handleCreateExam(currentConfigForResults);
+    }
+  };
+
   const handleViewSavedExam = (exam: SavedExam) => {
     setState({ isLoading: false, error: null, data: exam.data });
     setCurrentConfigForResults(exam.config);
@@ -133,7 +139,12 @@ const App: React.FC = () => {
         
         {view === 'results' && state.data && currentConfigForResults && (
           <div className="animate-in fade-in duration-500">
-            <ResultDisplay data={state.data} config={currentConfigForResults} onBack={reset} />
+            <ResultDisplay 
+              data={state.data} 
+              config={currentConfigForResults} 
+              onBack={reset} 
+              onRegenerate={handleRegenerate} 
+              isRegenerating={state.isLoading} />
           </div>
         )}
 

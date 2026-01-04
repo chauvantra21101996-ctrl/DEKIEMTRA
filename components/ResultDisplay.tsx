@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -5,7 +6,7 @@ import rehypeRaw from 'rehype-raw';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { GeneratedExamData, ExamConfig } from '../types.ts';
-import { Printer, ChevronLeft, FileSpreadsheet, ListChecks, FileText, CheckSquare, Save, FileType, Check, Info, ClipboardCopy, FileDown, Loader2 } from 'lucide-react';
+import { Printer, ChevronLeft, FileSpreadsheet, ListChecks, FileText, CheckSquare, Save, FileType, Check, Info, ClipboardCopy, FileDown, Loader2, RefreshCw } from 'lucide-react';
 import { saveExam } from '../services/storageService.ts';
 import MatrixSample from './MatrixSample.tsx';
 
@@ -13,9 +14,11 @@ interface Props {
   data: GeneratedExamData;
   config: ExamConfig;
   onBack: () => void;
+  onRegenerate: () => void;
+  isRegenerating: boolean;
 }
 
-const ResultDisplay: React.FC<Props> = ({ data, config, onBack }) => {
+const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, isRegenerating }) => {
   const [activeTab, setActiveTab] = useState<'matrix' | 'spec' | 'exam' | 'answers'>('matrix');
   const [isSaved, setIsSaved] = useState(false);
   const [showSample, setShowSample] = useState(false);
@@ -201,6 +204,23 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack }) => {
         </div>
         
         <div className="flex gap-2 flex-wrap justify-end">
+          <button 
+            onClick={onRegenerate}
+            disabled={isRegenerating}
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-wait transition-all"
+          >
+            {isRegenerating ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                <span className="hidden sm:inline">Đang tạo lại...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw size={18} />
+                <span className="hidden sm:inline">Tạo lại đề mới</span>
+              </>
+            )}
+          </button>
           {activeTab === 'matrix' && (
             <button 
               onClick={handleCopyToClipboard} 
