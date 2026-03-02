@@ -4,6 +4,9 @@ import { ChatMessage, ExamConfig } from '../types.ts';
 import { getAIAssistantResponse } from '../services/geminiService.ts';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeRaw from 'rehype-raw';
+import rehypeKatex from 'rehype-katex';
 
 interface Props {
   isOpen: boolean;
@@ -25,6 +28,22 @@ const AIAssistant: React.FC<Props> = ({ isOpen, onClose, currentExamConfig }) =>
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    const renderMath = () => {
+      if (isOpen && typeof (window as any).MathJax?.typesetPromise === 'function') {
+        (window as any).MathJax.typesetPromise().catch((err: any) => console.error('MathJax error:', err));
+      }
+    };
+
+    renderMath();
+    const timers = [
+      setTimeout(renderMath, 100),
+      setTimeout(renderMath, 500),
+      setTimeout(renderMath, 1500)
+    ];
+    return () => timers.forEach(t => clearTimeout(t));
+  }, [messages, isOpen]);
 
   useEffect(scrollToBottom, [messages]);
 
@@ -99,7 +118,10 @@ const AIAssistant: React.FC<Props> = ({ isOpen, onClose, currentExamConfig }) =>
                   : 'bg-red-50 text-red-700 rounded-bl-lg'
               }`}>
                 <div className="prose prose-sm max-w-none">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm, remarkMath]} 
+                    rehypePlugins={[rehypeRaw, rehypeKatex]}
+                  >
                     {msg.content}
                   </ReactMarkdown>
                 </div>

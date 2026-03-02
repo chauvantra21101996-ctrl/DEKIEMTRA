@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
+import rehypeKatex from 'rehype-katex';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { GeneratedExamData, ExamConfig } from '../types.ts';
@@ -40,9 +42,36 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
 
   useEffect(() => {
     // Re-run MathJax typesetting when content changes to ensure LaTeX renders correctly
-    if ((activeTab === 'exam' || activeTab === 'answers') && typeof (window as any).MathJax?.typesetPromise === 'function') {
-      setTimeout(() => (window as any).MathJax.typesetPromise(), 100);
-    }
+    const renderMath = () => {
+      if (typeof (window as any).MathJax?.typesetPromise === 'function') {
+        (window as any).MathJax.typesetPromise()
+          .then(() => {
+            // Success
+          })
+          .catch((err: any) => {
+            console.error('MathJax error:', err);
+            // Retry once after a short delay if it failed
+            setTimeout(() => {
+              if (typeof (window as any).MathJax?.typesetPromise === 'function') {
+                (window as any).MathJax.typesetPromise().catch(() => {});
+              }
+            }, 1000);
+          });
+      }
+    };
+
+    // Initial render
+    renderMath();
+    
+    // Some content might take a bit to render in the DOM (like tables or complex markdown)
+    const timers = [
+      setTimeout(renderMath, 100),
+      setTimeout(renderMath, 500),
+      setTimeout(renderMath, 1500),
+      setTimeout(renderMath, 3000)
+    ];
+    
+    return () => timers.forEach(t => clearTimeout(t));
   }, [data, activeTab]);
 
   const handleCopyToClipboard = () => {
@@ -342,7 +371,10 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
                 {activeTab === 'spec' && <div className="spec-7791-container" dangerouslySetInnerHTML={{ __html: data.specification }} />}
                 {(activeTab === 'exam' || activeTab === 'answers') && (
                   <div className="exam-paper-container markdown-content">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                    <ReactMarkdown 
+                      remarkPlugins={[remarkGfm, remarkMath]} 
+                      rehypePlugins={[rehypeRaw, rehypeKatex]}
+                    >
                       {activeTab === 'exam' ? data.examPaper : data.answers}
                     </ReactMarkdown>
                   </div>

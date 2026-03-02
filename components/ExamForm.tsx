@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import mammoth from 'mammoth';
+import * as mammoth from 'mammoth';
 import { ExamConfig, ExamType, QuestionCounts, LevelDistribution, ScopeItem, QuestionFormat, InputMode, CurriculumChapter, CurriculumLesson } from '../types.ts';
 import { CURRICULUM_DATA } from '../data/curriculum.ts';
 import { FileText, CheckCircle, PieChart, Book, Plus, Trash2, Calculator, CalendarCheck, Save, RotateCcw, Upload, FileUp, AlertCircle, Sparkles, PlusCircle, LayoutGrid, ListChecks, Percent, ChevronDown, GripVertical, Share2, Lightbulb, Send, Compass, Scale, PencilRuler, Loader2 } from 'lucide-react';

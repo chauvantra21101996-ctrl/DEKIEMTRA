@@ -234,14 +234,15 @@ export const CURRICULUM_DATA: Record<string, Record<string, Record<string, Curri
     },
     "8": {
       "Kết nối tri thức với cuộc sống": [
-        { chapter: "Chương I: Phản ứng hóa học", lessons: [{name: "Bài 2: Phản ứng hóa học"}, {name: "Bài 3: Mol và tỉ khối chất khí"}, {name: "Bài 4: Định luật bảo toàn khối lượng và phương trình hóa học"}, {name: "Bài 5: Tính theo phương trình hóa học"}, {name: "Bài 6: Nồng độ dung dịch"}, {name: "Bài 7: Tốc độ phản ứng và chất xúc tác"}] },
-        { chapter: "Chương II: Một số hợp chất thông dụng", lessons: [{name: "Bài 8 - 12: Acid, Base, pH, Oxide, Muối, Phân bón"}] },
-        { chapter: "Chương III: Khối lượng riêng và áp suất", lessons: [{name: "Bài 13: Khối lượng riêng"}, {name: "Bài 15: Áp suất trên một bề mặt"}, {name: "Bài 16: Áp suất chất lỏng. Áp suất khí quyển"}, {name: "Bài 17: Lực đẩy Archimedes"}] },
-        { chapter: "Chương IV: Tác dụng làm quay của lực", lessons: [{name: "Bài 18 - 19: Moment lực, Đòn bẩy"}] },
-        { chapter: "Chương V: Điện", lessons: [{name: "Bài 20 - 25: Nhiễm điện, Dòng điện, Mạch điện, Tác dụng dòng điện, Cường độ và Hiệu điện thế"}] },
-        { chapter: "Chương VI: Nhiệt", lessons: [{name: "Bài 26 - 29: Năng lượng nhiệt, Nội năng, Truyền nhiệt, Nở vì nhiệt"}] },
-        { chapter: "Chương VII: Sinh học cơ thể người", lessons: [{name: "Bài 30 - 40: Hệ vận động, Tiêu hóa, Tuần hoàn, Hô hấp, Bài tiết, Thần kinh, Nội tiết, Sinh sản"}] },
-        { chapter: "Chương VIII: Sinh vật và môi trường", lessons: [{name: "Bài 41 - 47: Hệ sinh thái, Sinh quyển, Cân bằng tự nhiên"}] }
+        { chapter: "Mở đầu", lessons: [{name: "Bài 1: Sử dụng một số hoá chất, thiết bị cơ bản trong phòng thí nghiệm"}] },
+        { chapter: "Chương I: Phản ứng hoá học", lessons: [{name: "Bài 2: Phản ứng hoá học"}, {name: "Bài 3: Mol và tỉ khối chất khí"}, {name: "Bài 4: Dung dịch và nồng độ"}, {name: "Bài 5: Định luật bảo toàn khối lượng và phương trình hoá học"}, {name: "Bài 6: Tính theo phương trình hoá học"}, {name: "Bài 7: Tốc độ phản ứng và chất xúc tác"}] },
+        { chapter: "Chương II: Một số hợp chất thông dụng", lessons: [{name: "Bài 8: Acid"}, {name: "Bài 9: Base. Thang pH"}, {name: "Bài 10: Oxide"}, {name: "Bài 11: Muối"}, {name: "Bài 12: Phân bón hoá học"}] },
+        { chapter: "Chương III: Khối lượng riêng và áp suất", lessons: [{name: "Bài 13: Khối lượng riêng"}, {name: "Bài 14: Thực hành xác định khối lượng riêng"}, {name: "Bài 15: Áp suất trên một bề mặt"}, {name: "Bài 16: Áp suất chất lỏng. Áp suất khí quyển"}, {name: "Bài 17: Lực đẩy Archimedes"}] },
+        { chapter: "Chương IV: Tác dụng làm quay của lực", lessons: [{name: "Bài 18: Tác dụng làm quay của lực. Moment lực"}, {name: "Bài 19: Đòn bẩy và ứng dụng"}] },
+        { chapter: "Chương V: Điện", lessons: [{name: "Bài 20: Hiện tượng nhiễm điện do cọ xát"}, {name: "Bài 21: Dòng điện, nguồn điện"}, {name: "Bài 22: Mạch điện đơn giản"}, {name: "Bài 23: Tác dụng của dòng điện"}, {name: "Bài 24: Cường độ dòng điện và hiệu điện thế"}, {name: "Bài 25: Thực hành đo cường độ dòng điện và hiệu điện thế"}] },
+        { chapter: "Chương VI: Nhiệt", lessons: [{name: "Bài 26: Năng lượng nhiệt và nội năng"}, {name: "Bài 27: Thực hành đo năng lượng nhiệt bằng joulemeter"}, {name: "Bài 28: Sự truyền nhiệt"}, {name: "Bài 29: Sự nở vì nhiệt"}] },
+        { chapter: "Chương VII: Sinh học cơ thể người", lessons: [{name: "Bài 30: Khái quát về cơ thể người"}, {name: "Bài 31: Hệ vận động ở người"}, {name: "Bài 32: Dinh dưỡng và tiêu hoá ở người"}, {name: "Bài 33: Máu và hệ tuần hoàn của cơ thể người"}, {name: "Bài 34: Hệ hô hấp ở người"}, {name: "Bài 35: Hệ bài tiết ở người"}, {name: "Bài 36: Điều hoà môi trường trong của cơ thể người"}, {name: "Bài 37: Hệ thần kinh và các giác quan ở người"}, {name: "Bài 38: Hệ nội tiết ở người"}, {name: "Bài 39: Da và điều hoà thân nhiệt ở người"}, {name: "Bài 40: Sinh sản ở người"}] },
+        { chapter: "Chương VIII: Sinh vật và môi trường", lessons: [{name: "Bài 41: Môi trường và các nhân tố sinh thái"}, {name: "Bài 42: Quần thể sinh vật"}, {name: "Bài 43: Quần xã sinh vật"}, {name: "Bài 44: Hệ sinh thái"}, {name: "Bài 45: Sinh quyển"}, {name: "Bài 46: Cân bằng tự nhiên"}, {name: "Bài 47: Bảo vệ môi trường"}] }
       ]
     },
     "9": {
