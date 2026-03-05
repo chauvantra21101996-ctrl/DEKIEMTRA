@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
-import rehypeKatex from 'rehype-katex';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { GeneratedExamData, ExamConfig } from '../types.ts';
@@ -23,9 +22,38 @@ interface Props {
 const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, isRegenerating }) => {
   const [activeTab, setActiveTab] = useState<'matrix' | 'spec' | 'exam' | 'answers'>('matrix');
   const [isSaved, setIsSaved] = useState(false);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [saveTitle, setSaveTitle] = useState('');
   const [showSample, setShowSample] = useState(false);
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied'>('idle');
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  // Trigger MathJax typesetting whenever the tab or data changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (typeof (window as any).MathJax?.typesetPromise === 'function') {
+        (window as any).MathJax.typesetPromise();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [activeTab, data]);
+
+  const handleSave = () => {
+    const defaultTitle = `Đề kiểm tra ${config.subject} - Lớp ${config.grade}`;
+    setSaveTitle(defaultTitle);
+    setShowSaveModal(true);
+  };
+
+  const confirmSave = () => {
+    const success = saveExam(config, data, saveTitle || `Đề kiểm tra ${config.subject}`);
+    if (success) {
+      setIsSaved(true);
+      setShowSaveToast(true);
+      setShowSaveModal(false);
+      setTimeout(() => setShowSaveToast(false), 3000);
+    }
+  };
   
   const [printSettings, setPrintSettings] = useState({
     examName: `HỒ SƠ ĐỀ KIỂM TRA ĐỊNH KÌ`,
@@ -89,6 +117,21 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
     const content = document.getElementById('print-area')?.innerHTML;
     if (!content) return;
     
+    // Get MathJax styles if available
+    let mathJaxStyles = '';
+    if (typeof (window as any).MathJax?.chtmlStylesheet === 'function') {
+      const stylesheet = (window as any).MathJax.chtmlStylesheet();
+      if (stylesheet) {
+        mathJaxStyles = stylesheet.innerHTML;
+      }
+    } else {
+      // Fallback: try to find the style element
+      const styleEl = document.getElementById('MathJax-CHTML-Styles');
+      if (styleEl) {
+        mathJaxStyles = styleEl.innerHTML;
+      }
+    }
+    
     const header = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head><meta charset='utf-8'>
@@ -102,6 +145,7 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
         .font-bold { font-weight: bold; }
         .text-uppercase { text-transform: uppercase; }
         .italic { font-style: italic; }
+        ${mathJaxStyles}
       </style>
       </head><body><div class="Section1">
     `;
@@ -115,6 +159,12 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
 
   const exportToPdf = async () => {
     setIsExportingPdf(true);
+    
+    // Ensure MathJax is fully rendered before capturing
+    if (typeof (window as any).MathJax?.typesetPromise === 'function') {
+      await (window as any).MathJax.typesetPromise();
+    }
+    
     const input = document.getElementById('print-area');
     if (!input) {
       setIsExportingPdf(false);
@@ -283,12 +333,67 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
           <button onClick={() => window.print()} className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-800 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-black">
             <Printer size={18} /> <span className="hidden sm:inline">In ngay</span>
           </button>
-          <button onClick={() => { saveExam(config, data, `Hồ sơ ${config.subject}`); setIsSaved(true); }} 
+          <button onClick={handleSave} 
             className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition ${isSaved ? 'bg-green-100 text-green-700' : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}>
             {isSaved ? <Check size={18} /> : <Save size={18} />} <span className="hidden sm:inline">{isSaved ? 'Đã lưu' : 'Lưu trữ'}</span>
           </button>
         </div>
       </div>
+
+      {/* Save Success Toast */}
+      {showSaveToast && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-bottom-4 fade-in duration-300">
+          <div className="bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-emerald-500">
+            <div className="bg-white/20 p-1 rounded-full">
+              <Check size={16} />
+            </div>
+            <span className="font-bold text-sm">Đã lưu đề thi vào Kho lưu trữ thành công!</span>
+          </div>
+        </div>
+      )}
+
+      {/* Save Modal */}
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <Save size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-800">Lưu vào Kho lưu trữ</h3>
+                <p className="text-sm text-slate-500">Đặt tên để dễ dàng tìm lại sau này</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Tên đề thi</label>
+              <input 
+                type="text"
+                autoFocus
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all font-bold text-slate-700"
+                value={saveTitle}
+                onChange={(e) => setSaveTitle(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && confirmSave()}
+                placeholder="Ví dụ: Đề thi giữa kì 1 - Lớp 9A1"
+              />
+            </div>
+            <div className="p-6 bg-slate-50 flex gap-3">
+              <button 
+                onClick={() => setShowSaveModal(false)}
+                className="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={confirmSave}
+                className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-600/20 transition-all"
+              >
+                Lưu ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row flex-grow bg-slate-50 h-[calc(100vh-64px)] overflow-hidden">
         {/* Sidebar */}
@@ -366,14 +471,14 @@ const ResultDisplay: React.FC<Props> = ({ data, config, onBack, onRegenerate, is
               )}
 
               {/* CONTENT LOGIC */}
-              <div className="text-[11pt]">
+              <div className="text-[11pt] tex2jax_process">
                 {activeTab === 'matrix' && <div className="matrix-7791-container" dangerouslySetInnerHTML={{ __html: data.matrix }} />}
                 {activeTab === 'spec' && <div className="spec-7791-container" dangerouslySetInnerHTML={{ __html: data.specification }} />}
                 {(activeTab === 'exam' || activeTab === 'answers') && (
                   <div className="exam-paper-container markdown-content">
                     <ReactMarkdown 
                       remarkPlugins={[remarkGfm, remarkMath]} 
-                      rehypePlugins={[rehypeRaw, rehypeKatex]}
+                      rehypePlugins={[rehypeRaw]}
                     >
                       {activeTab === 'exam' ? data.examPaper : data.answers}
                     </ReactMarkdown>

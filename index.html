@@ -21,7 +21,12 @@
           packages: { '[+]': ['mhchem'] }
         },
         options: {
-          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+          ignoreHtmlClass: 'tex2jax_ignore',
+          processHtmlClass: 'tex2jax_process|math-inline|math-display'
+        },
+        chtml: {
+          fontURL: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/output/chtml/fonts/woff-v2'
         }
       };
     </script>
@@ -74,6 +79,13 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background-color: #60a5fa; /* blue-400 */
+      }
+      .markdown-content .math-inline {
+        padding: 0 2px;
+      }
+      .markdown-content .math-display {
+        margin: 1em 0;
+        overflow-x: auto;
       }
     </style>
 </head>

@@ -657,12 +657,19 @@ const ExamForm: React.FC<Props> = ({ onSubmit, isLoading, config, setConfig }) =
 
                     <div className="col-span-1 md:col-span-1">
                        <label className="md:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block">Số tiết</label>
-                      <input 
-                        type="number" 
-                        className="w-full px-3 md:px-1 py-2 border-b border-gray-200 focus:border-blue-500 rounded-lg text-left md:text-center text-sm font-bold outline-none text-blue-800 bg-transparent focus:bg-white" 
-                        value={item.periods || ''} 
-                        onChange={(e) => updateScopeItem(item.id, 'periods', parseInt(e.target.value) || 0)} 
-                      />
+                       <div className="relative">
+                          <input 
+                            type="number" 
+                            className="w-full px-3 md:px-1 py-2 border-b border-gray-200 focus:border-blue-500 rounded-lg text-left md:text-center text-sm font-bold outline-none text-blue-800 bg-transparent focus:bg-white" 
+                            value={item.periods || ''} 
+                            onChange={(e) => updateScopeItem(item.id, 'periods', parseInt(e.target.value) || 0)} 
+                          />
+                          {item.periods > 0 && totalPeriods > 0 && (
+                            <div className="absolute -top-4 right-0 md:left-1/2 md:-translate-x-1/2 text-[9px] font-black text-blue-500 bg-blue-50 px-1 rounded border border-blue-100 whitespace-nowrap">
+                              {Math.round((item.periods / totalPeriods) * 100)}%
+                            </div>
+                          )}
+                       </div>
                     </div>
                     
                     <div className="col-span-1 md:col-span-1 flex items-center justify-end md:justify-center space-x-1 mt-2 md:mt-0">

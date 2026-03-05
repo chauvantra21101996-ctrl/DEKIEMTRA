@@ -247,20 +247,21 @@ export const CURRICULUM_DATA: Record<string, Record<string, Record<string, Curri
     },
     "9": {
       "Kết nối tri thức với cuộc sống": [
-        { chapter: "Chương I: Năng lượng cơ học", lessons: [{name: "Bài 2 - 4: Động năng, Thế năng, Cơ năng, Công và Công suất"}] },
-        { chapter: "Chương II: Ánh sáng", lessons: [{name: "Bài 5 - 11: Khúc xạ, Phản xạ toàn phần, Lăng kính, Thấu kính, Kính lúp, Màu sắc ánh sáng"}] },
-        { chapter: "Chương III: Điện", lessons: [{name: "Bài 12 - 14: Định luật Ohm, Mạch nối tiếp/song song, Công suất điện"}] },
-        { chapter: "Chương IV: Điện từ", lessons: [{name: "Bài 15 - 17: Cảm ứng điện từ, Dòng điện xoay chiều, Máy biến áp"}] },
-        { chapter: "Chương V: Năng lượng với cuộc sống", lessons: [{name: "Bài 18 - 19"}] },
-        { chapter: "Chương VI: Kim loại. Sự khác nhau giữa kim loại và phi kim", lessons: [{name: "Bài 20 - 23"}] },
-        { chapter: "Chương VII: Hydrocarbon và nguồn nhiên liệu", lessons: [{name: "Bài 24 - 28: Alkane, Ethylene, Acetylene"}] },
-        { chapter: "Chương VIII: Alcohol và Acetic Acid", lessons: [{name: "Bài 29 - 30"}] },
-        { chapter: "Chương IX: Lipid. Carbohydrate. Protein. Polymer", lessons: [{name: "Bài 31 - 35"}] },
-        { chapter: "Chương X: Khai thác tài nguyên từ vỏ Trái Đất", lessons: [{name: "Bài 36 - 37"}] },
-        { chapter: "Chương XI: Di truyền Mendel. Cơ sở phân tử của hiện tượng di truyền", lessons: [{name: "Bài 38 - 41"}] },
-        { chapter: "Chương XII: Di truyền nhiễm sắc thể", lessons: [{name: "Bài 42 - 45: Nguyên phân, Giảm phân"}] },
-        { chapter: "Chương XIII: Di truyền học người", lessons: [{name: "Bài 46 - 47"}] },
-        { chapter: "Chương XIV: Tiến hóa", lessons: [{name: "Bài 48 - 50"}] }
+        { chapter: "Phần mở đầu", lessons: [{name: "Bài 1. Sử dụng một số dụng cụ, hóa chất. Thuyết trình một vấn đề khoa học"}] },
+        { chapter: "Chương I. NĂNG LƯỢNG CƠ HỌC", lessons: [{name: "Bài 2. Động năng, Thế năng"}, {name: "Bài 3. Cơ năng"}, {name: "Bài 4. Công và công suất"}] },
+        { chapter: "Chương II. ÁNH SÁNG", lessons: [{name: "Bài 5. Khúc xạ ánh sáng"}, {name: "Bài 6. Phản xạ toàn phần"}, {name: "Bài 7. Lăng kính"}, {name: "Bài 8. Thấu kính"}, {name: "Bài 9. Thực hành đo tiêu cự của thấu kính hội tụ"}, {name: "Bài 10. Kính lúp. Bài tập thấu kính"}] },
+        { chapter: "Chương III. ĐIỆN", lessons: [{name: "Bài 11. Điện trở. Định luật Ôm"}, {name: "Bài 12. Đoạn mạch nối tiếp, song song"}, {name: "Bài 13. Năng lượng của dòng điện và công suất điện"}] },
+        { chapter: "Chương IV. ĐIỆN TỪ", lessons: [{name: "Bài 14. Cảm ứng điện từ. Nguyên tắc tạo ra dòng điện xoay chiều"}, {name: "Bài 15. Tác dụng của dòng điện xoay chiều"}] },
+        { chapter: "Chương V. NĂNG LƯỢNG VỚI CUỘC SỐNG", lessons: [{name: "Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hoá thạch"}, {name: "Bài 17. Một số dạng năng lượng tái tạo"}] },
+        { chapter: "Chương VI. KIM LOẠI. SỰ KHÁC NHAU CƠ BẢN GIỮA PHI KIM VÀ KIM LOẠI", lessons: [{name: "Bài 18. Tính chất chung của kim loại"}, {name: "Bài 19. Dãy hoạt động hoá học"}, {name: "Bài 20. Tách kim loại và việc sử dụng hợp kim"}, {name: "Bài 21. Sự khác nhau cơ bản giữa phi kim và kim loại"}] },
+        { chapter: "Chương VII. GIỚI THIỆU VỀ CHẤT HỮU CƠ – HYDROCARBON VÀ NGUỒN NHIÊN LIỆU", lessons: [{name: "Bài 22. Giới thiệu về hợp chất hữu cơ"}, {name: "Bài 23. Alkane"}, {name: "Bài 24. Alkene"}, {name: "Bài 25. Nguồn nhiên liệu"}] },
+        { chapter: "Chương VIII. ETHYLIC ALCOHOL VÀ ACETIC ACID", lessons: [{name: "Bài 26. Ethylic alcohol"}, {name: "Bài 27. Acetic acid"}] },
+        { chapter: "Chương IX. LIPID – CARBOHYDRATE – PROTEIN – POLYMER", lessons: [{name: "Bài 28. Lipid"}, {name: "Bài 29. Carbohydrate: Glucose và saccharose"}, {name: "Bài 30. Tinh bột và cellulose"}, {name: "Bài 31. Protein"}, {name: "Bài 32. Polymer"}] },
+        { chapter: "Chương X. KHAI THÁC TÀI NGUYÊN TỪ VỎ TRÁI ĐẤT", lessons: [{name: "Bài 33. Sơ lược về hoá học vỏ Trái Đất và khai thác tài nguyên từ vỏ Trái Đất"}, {name: "Bài 34. Khai thác đá vôi. Công nghiệp silicate"}, {name: "Bài 35. Khai thác nhiên liệu hoá thạch, nguồn carbon. Chu trình carbon và sự ấm lên toàn cầu"}] },
+        { chapter: "Chương XI. DI TRUYỀN HỌC MENDEL – CƠ SỞ PHÂN TỬ CỦA HIỆN TƯỢNG DI TRUYỀN", lessons: [{name: "Bài 36. Khái quát về di truyền học"}, {name: "Bài 37. Các quy luật di truyền của Mendel"}, {name: "Bài 38. Nucleic acid và gene"}, {name: "Bài 39. Tái bản DNA và phiên mã tạo RNA"}, {name: "Bài 40. Dịch mã và mối quan hệ từ gene đến tính trạng"}, {name: "Bài 41. Đột biến gene"}] },
+        { chapter: "Chương XII. DI TRUYỀN NHIỄM SẮC THỂ", lessons: [{name: "Bài 42. Nhiễm sắc thể và bộ nhiễm sắc thể"}, {name: "Bài 43. Nguyên phân và giảm phân"}, {name: "Bài 44. Nhiễm sắc thể giới tính và cơ chế xác định giới tính"}, {name: "Bài 45. Di truyền liên kết"}, {name: "Bài 46. Đột biến nhiễm sắc thể"}] },
+        { chapter: "Chương XIII. DI TRUYỀN HỌC VỚI CON NGƯỜI VÀ ĐỜI SỐNG", lessons: [{name: "Bài 47. Di truyền học với con người"}, {name: "Bài 48. Ứng dụng công nghệ di truyền vào đời sống"}] },
+        { chapter: "Chương XIV. TIẾN HÓA", lessons: [{name: "Bài 49. Khái niệm tiến hoá và các hình thức chọn lọc"}, {name: "Bài 50. Cơ chế tiến hoá"}, {name: "Bài 51. Sự phát sinh và phát triển sự sống trên Trái Đất"}] }
       ]
     }
   },

@@ -8,8 +8,8 @@ import AIAssistant from './components/AIAssistant.tsx';
 import Guide from './components/Guide.tsx'; // Import the new Guide component
 import { ExamConfig, GeneratedExamData, GenerationState, SavedExam, ExamType, QuestionFormat } from './types.ts';
 import { generateExamContent } from './services/geminiService.ts';
-import { getSavedExams, deleteExam } from './services/storageService.ts';
-import { BookOpen, History, PlusCircle, Sparkles, FileSpreadsheet, BotMessageSquare, ChevronDown } from 'lucide-react';
+import { getSavedExams, deleteExam, clearAllExams } from './services/storageService.ts';
+import { BookOpen, History, PlusCircle, Sparkles, FileSpreadsheet, BotMessageSquare, ChevronDown, Archive } from 'lucide-react';
 
 const INITIAL_CONFIG: ExamConfig = {
   subject: 'Toán học',
@@ -79,6 +79,13 @@ const App: React.FC = () => {
     setSavedExams(getSavedExams());
   };
 
+  const handleClearAllExams = () => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa TẤT CẢ hồ sơ trong kho lưu trữ không? Hành động này không thể hoàn tác.')) {
+      clearAllExams();
+      setSavedExams([]);
+    }
+  };
+
   const reset = () => {
     setState({ isLoading: false, error: null, data: null });
     setView('form');
@@ -124,6 +131,22 @@ const App: React.FC = () => {
                 Xây dựng đề kiểm tra<br />
                 Nhanh chóng & Chuẩn mực
               </h1>
+              <div className="flex justify-center gap-4 mb-8">
+                <button 
+                  onClick={() => setView('history')}
+                  className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-slate-600 hover:bg-slate-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm"
+                >
+                  <Archive size={20} className="text-blue-600" />
+                  Kho lưu trữ đề thi
+                </button>
+                <button 
+                  onClick={() => setShowGuide(true)}
+                  className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-slate-600 hover:bg-slate-50 hover:border-blue-200 hover:text-blue-700 transition-all shadow-sm"
+                >
+                  <BookOpen size={20} className="text-emerald-600" />
+                  Hướng dẫn sử dụng
+                </button>
+              </div>
               <p className="max-w-3xl mx-auto text-slate-700 font-medium">
                 Hệ thống tự động hóa việc xây dựng Ma trận, Bản đặc tả và Đề kiểm tra bám sát chương trình GDPT 2018 và Công văn 7791.
               </p>
@@ -154,6 +177,7 @@ const App: React.FC = () => {
               exams={savedExams} 
               onView={handleViewSavedExam} 
               onDelete={handleDeleteSavedExam} 
+              onClearAll={handleClearAllExams}
               onBack={() => setView('form')}
             />
           </div>
@@ -177,7 +201,7 @@ const App: React.FC = () => {
               </button>
               <div className="w-px h-4 bg-gray-200"></div>
               <button onClick={() => setView('history')} className={`flex items-center gap-2 font-bold text-xs transition-colors ${view === 'history' ? 'text-blue-700' : 'text-gray-400 hover:text-blue-600'}`}>
-                <History size={16}/> LỊCH SỬ
+                <History size={16}/> KHO LƯU TRỮ
               </button>
               <div className="w-px h-4 bg-gray-200"></div>
               <button onClick={() => setShowGuide(true)} className="flex items-center gap-2 font-bold text-xs text-gray-400 hover:text-blue-600 transition-colors">

@@ -153,6 +153,7 @@ export const generateExamContent = async (config: ExamConfig): Promise<Generated
     - Các cột "Tổng" (Biết, Hiểu, Vận dụng) ở cuối bảng: Đối với mỗi dòng, tính tổng số câu hỏi theo từng mức độ nhận thức (cộng tất cả các loại hình TNKQ và TL).
     - **TÍNH TOÁN CỘT "Tỉ lệ % điểm" (QUAN TRỌNG):**
         + Tổng điểm toàn bài thi là 10. Phân bổ tổng điểm này theo "Tỉ lệ mức độ" đã cho ở DỮ LIỆU ĐẦU VÀO (Nhận biết ${config.levelDistribution.awareness}%, Thông hiểu ${config.levelDistribution.understanding}%, Vận dụng ${config.levelDistribution.application}%).
+        + **PHÂN BỔ CÂU HỎI THEO SỐ TIẾT (CỰC KÌ QUAN TRỌNG):** Số lượng câu hỏi và tổng điểm cho mỗi "Nội dung/Đơn vị kiến thức" phải tỉ lệ thuận với "Số tiết" của nội dung đó. Nội dung có nhiều tiết hơn thì số lượng câu hỏi (và tổng điểm) phải nhiều hơn tương ứng.
         + **QUY TẮC ĐIỂM PHẦN 2 (ĐÚNG/SAI): Mỗi câu hỏi Đúng/Sai có giá trị chính xác là 1,0 điểm.**
         + Dựa vào phân bổ điểm theo mức độ và quy tắc trên, hãy tính điểm cho các câu hỏi còn lại một cách hợp lý.
         + Đối với mỗi dòng "Nội dung/đơn vị kiến thức", hãy tính tổng điểm của các câu hỏi thuộc dòng đó.
@@ -182,16 +183,15 @@ export const generateExamContent = async (config: ExamConfig): Promise<Generated
       + Tiêu đề phần (PHẦN I, PHẦN II...) phải là heading cấp 2 (dùng \`##\`), IN HOA, và ghi rõ tổng điểm. Ví dụ: \`## PHẦN I. TRẮC NGHIỆM NHIỀU LỰA CHỌN (3,0 điểm)\`. Tổng điểm phần II phải bằng số câu của phần II.
       + Mỗi câu hỏi là một đoạn văn (paragraph) riêng.
       + Bắt đầu mỗi câu hỏi bằng \`**Câu X:**\` (in đậm, X là số thứ tự). Ví dụ: \`**Câu 1:** Cho tập hợp...\`
-      + **QUAN TRỌNG (LATEX):** Mọi công thức toán học, ký hiệu khoa học (tập hợp, số mũ, phân số, v.v.) BẮT BUỘC phải được bao quanh bởi dấu \`$\` để hiển thị đúng định dạng LaTeX. Ví dụ: $x \in \mathbb{N}$, $A = \{1, 2, 3\}$, $2^3$, $a^2 + b^2 = c^2$.
-      + **CÔNG THỨC HÓA HỌC (BẮT BUỘC):** Đối với các công thức và phương trình hóa học, BẮT BUỘC sử dụng lệnh \`\\ce{...}\` bên trong dấu \`$\`. Ví dụ: $\\ce{H2O}$, $\\ce{CO2}$, $\\ce{CH4 + 2O2 -> CO2 + 2H2O}$. 
-      + **LƯU Ý ĐẶC BIỆT:** 
-        - TUYỆT ĐỐI KHÔNG dùng ký tự unicode (như ₂, ₃) hoặc văn bản thường cho chỉ số dưới/trên trong công thức hóa học.
-        - KHÔNG được để văn bản tiếng Việt hoặc khoảng trắng dư thừa bên trong dấu \`$\`. 
-        - Ví dụ SAI: \`$C_3H_5(OH)_3$\` (thiếu \\ce), \`$(C_3H_5(OH)3 iố ấ é đã ả ứ)$\` (có tiếng Việt bên trong $).
-        - Ví dụ ĐÚNG: $\\ce{C3H5(OH)3}$ (số mol chất béo đã phản ứng).
-        - Đảm bảo các dấu \`$\` luôn đi thành cặp và bao quanh trọn vẹn lệnh \`\\ce{...}\`.
-      + **PHẦN I (Nhiều lựa chọn):** Trình bày 4 phương án A, B, C, D. **MỖI PHƯƠNG ÁN BẮT BUỘC PHẢI XUỐNG DÒNG.** Sử dụng thẻ \`<br/>\` để ngắt dòng. Ví dụ:<br/>**A.** $P=\{x \in \mathbb{N} | x<9\}$<br/>**B.** $P=\{x \in \mathbb{N} | x \le 9\}$<br/>**C.** $P=\{x \in \mathbb{N} | x>9\}$<br/>**D.** $P=\{x \in \mathbb{N} | x \ge 9\}$
-      + **PHẦN II (Đúng/Sai):** BẮT BUỘC mỗi câu phải có một câu dẫn và **chính xác 4 phát biểu a, b, c, d.** **MỖI PHÁT BIỂU PHẢI XUỐNG DÒNG.** Ví dụ:<br/>**Câu 11:** Cho các số tự nhiên $A=2,024$, $B=2,042$, $C=1,999$ và tập hợp $S=\\{x \\in \\mathbb{N} | C < x < A\\}$.<br/>a) Số lớn nhất trong ba số A, B, C là 2,024.<br/>b) Số liền trước của số C là 2,000.<br/>c) Tập hợp S có chứa số 2,000.<br/>d) Viết số A dưới dạng La Mã là MMXXIV.
+      + **ĐỊNH DẠNG CÔNG THỨC (QUAN TRỌNG):** 
+        - TUYỆT ĐỐI KHÔNG sử dụng các ký hiệu LaTeX (như $, \, \ce, \frac, \sqrt, v.v.).
+        - TUYỆT ĐỐI KHÔNG sử dụng các ký tự unicode đặc biệt (như ₂, ₃).
+        - Hãy viết công thức bằng văn bản bình thường, rõ ràng, dễ hiểu.
+        - Ví dụ Hóa học: Viết "H2O", "CO2", "Fe2(SO4)3", "CH4 + 2O2 -> CO2 + 2H2O".
+        - Ví dụ Vật lí/Toán học: Viết "n1 > n2", "i < igh", "sin(igh) = n2/n1", "a^2 + b^2 = c^2", "10 m/s2".
+        - Đảm bảo các công thức vẫn chính xác về mặt nội dung khoa học nhưng trình bày dưới dạng văn bản thuần túy.
+      + **PHẦN I (Nhiều lựa chọn):** Trình bày 4 phương án A, B, C, D. **MỖI PHƯƠNG ÁN BẮT BUỘC PHẢI XUỐNG DÒNG.** Sử dụng thẻ \`<br/>\` để ngắt dòng. Ví dụ:<br/>**A.** n1 > n2<br/>**B.** n1 < n2<br/>**C.** n1 = n2<br/>**D.** n1 >= n2
+      + **PHẦN II (Đúng/Sai):** BẮT BUỘC mỗi câu phải có một câu dẫn và **chính xác 4 phát biểu a, b, c, d.** **MỖI PHÁT BIỂU PHẢI XUỐNG DÒNG.** Ví dụ:<br/>**Câu 11:** Cho các số tự nhiên A=2024, B=2042...<br/>a) Số lớn nhất là 2024.<br/>b) Số liền trước là 2000.
 
     YÊU CẦU 4: ĐÁP ÁN VÀ HƯỚNG DẪN CHẤM
     - **TÍNH CHÍNH XÁC TUYỆT ĐỐI:** Đáp án phải được kiểm tra kỹ lưỡng để đảm bảo chính xác 100%. Đây là yêu cầu quan trọng nhất.

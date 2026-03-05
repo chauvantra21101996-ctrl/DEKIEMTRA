@@ -6,14 +6,17 @@ interface Props {
   exams: SavedExam[];
   onView: (exam: SavedExam) => void;
   onDelete: (examId: string) => void;
+  onClearAll: () => void;
   onBack: () => void;
 }
 
 const ITEMS_PER_PAGE = 6;
 
-const SavedExamsList: React.FC<Props> = ({ exams, onView, onDelete, onBack }) => {
+const SavedExamsList: React.FC<Props> = ({ exams, onView, onDelete, onClearAll, onBack }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteConfirm, setDeleteConfirm] = useState<{id: string, title: string} | null>(null);
+  const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
 
   const filteredExams = useMemo(() => {
     return exams.filter(exam =>
@@ -41,15 +44,37 @@ const SavedExamsList: React.FC<Props> = ({ exams, onView, onDelete, onBack }) =>
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
+  const confirmDelete = () => {
+    if (deleteConfirm) {
+      onDelete(deleteConfirm.id);
+      setDeleteConfirm(null);
+    }
+  };
+
+  const confirmClearAll = () => {
+    onClearAll();
+    setShowClearAllConfirm(false);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4">
       <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-2 text-gray-500 hover:text-blue-700 transition font-bold bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100"
-        >
-          <ChevronLeft size={20} /> Quay lại
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-gray-500 hover:text-blue-700 transition font-bold bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100"
+          >
+            <ChevronLeft size={20} /> Quay lại
+          </button>
+          {exams.length > 0 && (
+            <button 
+              onClick={() => setShowClearAllConfirm(true)}
+              className="flex items-center gap-2 text-red-500 hover:text-red-700 transition font-bold bg-red-50 px-4 py-2 rounded-xl shadow-sm border border-red-100"
+            >
+              <Trash2 size={18} /> Xóa tất cả
+            </button>
+          )}
+        </div>
         <div className="text-center">
             <h2 className="text-2xl font-black text-gray-800">Hồ Sơ Đã Lưu</h2>
             <p className="text-sm text-gray-500">Kho lưu trữ các đề kiểm tra bạn đã tạo</p>
@@ -65,6 +90,74 @@ const SavedExamsList: React.FC<Props> = ({ exams, onView, onDelete, onBack }) =>
             />
         </div>
       </div>
+
+      {/* Individual Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+                <Trash2 size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-800">Xóa hồ sơ?</h3>
+                <p className="text-sm text-slate-500">Hành động này không thể hoàn tác</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-slate-600 font-medium">Bạn có chắc chắn muốn xóa hồ sơ <span className="font-bold text-slate-900">"{deleteConfirm.title}"</span> không?</p>
+            </div>
+            <div className="p-6 bg-slate-50 flex gap-3">
+              <button 
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg shadow-red-600/20 transition-all"
+              >
+                Xóa ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Confirmation Modal */}
+      {showClearAllConfirm && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4 animate-in fade-in duration-300">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+            <div className="p-6 border-b border-slate-100 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+                <Trash2 size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-slate-800">Xóa TẤT CẢ hồ sơ?</h3>
+                <p className="text-sm text-slate-500">Toàn bộ kho lưu trữ sẽ bị trống</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className="text-slate-600 font-medium text-center">Bạn có chắc chắn muốn xóa <span className="font-bold text-red-600">TẤT CẢ {exams.length} hồ sơ</span> trong kho lưu trữ không?</p>
+            </div>
+            <div className="p-6 bg-slate-50 flex gap-3">
+              <button 
+                onClick={() => setShowClearAllConfirm(false)}
+                className="flex-1 px-4 py-3 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition-colors"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={confirmClearAll}
+                className="flex-1 px-4 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 shadow-lg shadow-red-600/20 transition-all"
+              >
+                Xóa tất cả
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {exams.length === 0 ? (
         <div className="text-center bg-white/60 backdrop-blur-sm p-16 rounded-3xl border border-dashed border-gray-300 flex flex-col items-center gap-6 animate-in fade-in zoom-in duration-500">
@@ -94,21 +187,17 @@ const SavedExamsList: React.FC<Props> = ({ exams, onView, onDelete, onBack }) =>
                     <div className="p-3 rounded-xl bg-blue-50 text-blue-700 group-hover:bg-blue-700 group-hover:text-white transition-colors duration-300">
                         <FileText size={24} />
                     </div>
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex gap-2">
                          <button
                             onClick={() => onView(exam)}
-                            className="p-2 text-gray-400 hover:text-blue-700 hover:bg-blue-100 rounded-lg transition"
+                            className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition bg-blue-50"
                             title="Xem lại"
                         >
                             <Eye size={18} />
                         </button>
                          <button
-                            onClick={() => {
-                                if (window.confirm(`Bạn có chắc chắn muốn xóa hồ sơ "${exam.title}" không? Hành động này không thể hoàn tác.`)) {
-                                    onDelete(exam.id);
-                                }
-                            }}
-                            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-100 rounded-lg transition"
+                            onClick={() => setDeleteConfirm({id: exam.id, title: exam.title})}
+                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg transition bg-red-50"
                             title="Xóa hồ sơ"
                         >
                             <Trash2 size={18} />
