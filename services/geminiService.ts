@@ -68,7 +68,7 @@ export const getAIAssistantResponse = async (question: string, context: ExamConf
 };
 
 export const generateExamContent = async (config: ExamConfig): Promise<GeneratedExamData> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   
   const scopeDetails = config.scopeItems.map((item, index) => {
     return `- Chương/Chủ đề: "${item.chapter}" | Bài học/Nội dung: "${item.name}" | Số tiết: ${item.periods}`;
